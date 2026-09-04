@@ -1,0 +1,24 @@
+ToraTako PWA
+
+NUOVA IDENTITÀ GRAFICA TACHIGRAFO
+Le icone nella cartella /icons sono già quelle definitive:
+- icon-192.png
+- icon-512.png
+- icon-maskable-512.png
+- apple-touch-icon.png
+- favicon-32.png
+
+Splash:
+- splash-1080x1920.png (portrait)
+- splash-1920x1080.png (landscape)
+
+Carica nella ROOT del repository:
+index.html
+manifest.webmanifest
+service-worker.js
+offline.html
+splash-1080x1920.png
+splash-1920x1080.png
+cartella icons/
+
+Il Service Worker è stato portato a cache toratako-pwa-v2 per forzare il rinnovo delle vecchie icone.
