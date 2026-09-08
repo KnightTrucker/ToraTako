@@ -2420,7 +2420,7 @@ const EXTRA_ONCE=[0xF997,0xF998,0xF999,0xF9C7,0xF9C9,0xF9CB,0xF190];
 const GUARDED_PERIODIC=[0xF936];
 const GUARDED_SET=new Set([...EXTRA_ONCE,...GUARDED_PERIODIC]);
 const STATIC_ONCE=[...SAFE_STATIC_ONCE,...EXTRA_ONCE];
-// F9A0/F92C vengono letti presto perché servono subito a limite giornaliero e overspeed.
+// F9A0/F92C vengono letti presto come dati di sessione; PUNTE usa soglia fissa 90,4 km/h e OVERSPEED solo DID F908.
 const INITIAL_QUEUE=[...CORE_DYNAMIC,0xF9A0,0xF92C,...SLOW_DYNAMIC,...SAFE_STATIC_ONCE.filter(d=>d!==0xF9A0&&d!==0xF92C)];
 const STEADY_SEQ=[...CORE_DYNAMIC,...SLOW_DYNAMIC];
 const FULL_REFRESH_DIDS=[...new Set([0xF902,...INITIAL_QUEUE,...GUARDED_PERIODIC,...EXTRA_ONCE])];
@@ -2862,31 +2862,39 @@ function render(){
   const outActive=isOutScopeActive();
   $('connPill').classList.toggle('outscope',outActive);
 
-  const speed=values[0xF902], authorised=values[0xF92C];
+  const speed=values[0xF902];
   const sp=decodedValues[0xF902];
   $('speedValue').textContent=speed!=null?speed.toFixed(1):(sp?sp.replace(/\s*km\/h/i,''):'N/D');
 
-  const ov=decodedValues[0xF908]||'N/D';
-  const officialOver=/^OVERSPEED$/i.test(ov)||/ATTIVO/i.test(ov);
-  const liveOver=speed!=null&&authorised!=null&&speed>authorised;
+  // PUNTE: il timer è solo informativo e parte ESATTAMENTE da 90,4 km/h.
+  // Non genera mai da solo lo stato OVERSPEED.
+  // La scritta OVERSPEED può arrivare esclusivamente dall'evento ufficiale DTCO DID F908.
+  const PUNTE_TRIGGER_KMH=90.4;
+  const officialOver=values[0xF908]===1;
+  const abovePunte=speed!=null&&speed>=PUNTE_TRIGGER_KMH;
 
-  if(liveOver){
+  let punteRemain=null;
+  if(abovePunte){
     if(overspeedSince==null)overspeedSince=Date.now();
-    const remain=Math.max(0,30-Math.floor((Date.now()-overspeedSince)/1000));
-    if(remain>0){
-      $('overspeedValue').textContent=remain+' s';
-      $('overspeedValue').style.color='#ffc400';
-      $('overspeedNote').textContent='Countdown overspeed · limite '+authorised.toFixed(0)+' km/h';
-    }else{
-      $('overspeedValue').textContent='OVERSPEED';
-      $('overspeedValue').style.color='#ff4242';
-      $('overspeedNote').textContent=officialOver?'Confermato anche dal DTCO':'Superamento > 30 secondi';
-    }
+    punteRemain=Math.max(0,30-Math.floor((Date.now()-overspeedSince)/1000));
   }else{
     overspeedSince=null;
+  }
+
+  if(officialOver){
+    $('overspeedValue').textContent='OVERSPEED';
+    $('overspeedValue').style.color='#ff4242';
+    $('overspeedNote').textContent='Evento ufficiale DTCO · DID F908';
+  }else if(abovePunte){
+    $('overspeedValue').textContent=(punteRemain>0?punteRemain:0)+' s';
+    $('overspeedValue').style.color='#ffc400';
+    $('overspeedNote').textContent=punteRemain>0
+      ?'Countdown da 90,4 km/h'
+      :'> 30 s sopra 90,4 km/h · attesa evento DTCO';
+  }else{
     $('overspeedValue').textContent='—';
     $('overspeedValue').style.color='#53c82f';
-    $('overspeedNote').textContent=authorised==null?'In attesa del limite DTCO':'Entro il limite · '+authorised.toFixed(0)+' km/h';
+    $('overspeedNote').textContent=speed==null?'In attesa velocità DTCO':'Sotto 90,4 km/h';
   }
 
   // Chilometraggio camion nel riquadro DTCO: 0.000.000 KM
