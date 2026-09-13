@@ -1,0 +1,21 @@
+ToraTako BUILD 1.0
+Data build: 2026-09-13
+
+FILE DA CARICARE/SOSTITUIRE NELLA ROOT DI GitHub:
+1) index.html
+2) service-worker.js
+
+ToraTako_stemma_araldico_pulito.png è incluso come sorgente grafica di sicurezza;
+lo stemma usato dall'app è già incorporato dentro index.html.
+
+Correzioni incluse:
+- nessuna versione visibile nel titolo/header
+- popup sullo stemma: Versione 1.0
+- EVENTI TECNICI CARTA con icona esplicita
+- PDF EVENTI TECNICI con icona PDF esplicita
+- SCHEDA SPORCA e PDF SCHEDA SPORCA resi coerenti con gli altri pulsanti
+- service worker cache: toratako-pwa-v7-build-1-0-controls
+
+SHA256 index.html: 131d38d6945e414b2596fc2b764db51e86fa3f2f8062f6af4e606d8b6b338cef
+SHA256 service-worker.js: 74a737eb27eb79e5f1a874fefd8672b5c4beecbe72af733ce65902b20c864d86
+SHA256 stemma: fc57833775e5259577d41bc6501ca992bec429cb8607478e2450998f932c3c90
