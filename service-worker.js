@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v4-drive-dtco';
+const CACHE_NAME = 'toratako-pwa-v5-crest-popup';
 
 const APP_SHELL = [
   './',
@@ -15,52 +15,34 @@ const APP_SHELL = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
   self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(k => k !== CACHE_NAME)
-          .map(k => caches.delete(k))
-      )
-    )
+    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
   );
-
   self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-
   const url = new URL(event.request.url);
-
   if (url.origin !== self.location.origin) return;
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'no-store' })
         .then(response => {
           const copy = response.clone();
-
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, copy);
-          });
-
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           return response;
         })
-        .catch(() =>
-          caches.match(event.request)
-            .then(r => r || caches.match('./index.html'))
-            .then(r => r || caches.match('./offline.html'))
-        )
+        .catch(() => caches.match(event.request)
+          .then(r => r || caches.match('./index.html'))
+          .then(r => r || caches.match('./offline.html')))
     );
-
     return;
   }
 
@@ -70,16 +52,11 @@ self.addEventListener('fetch', event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, copy);
-            });
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           }
-
           return response;
         })
         .catch(() => cached);
-
       return cached || fresh;
     })
   );
