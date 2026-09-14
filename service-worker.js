@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v7-build-1-0-controls';
+const CACHE_NAME = 'toratako-pwa-v8-compensazioni-20260914';
 
 const APP_SHELL = [
   './',
