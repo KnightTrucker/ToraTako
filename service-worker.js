@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v6-control-buttons';
+const CACHE_NAME = 'toratako-pwa-v11-real-duty-control-rests';
 
 const APP_SHELL = [
   './',

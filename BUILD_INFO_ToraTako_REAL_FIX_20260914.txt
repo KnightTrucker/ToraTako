@@ -1,0 +1,24 @@
+ToraTako 1.0 — REAL FIX — 2026-09-14
+
+BASE CONTROLLATA:
+GitHub index precedente: 27beb550d98ad3a8fd4759897b49fde5262e78b8
+GitHub service-worker precedente: 44f4ef15b61450a1ae193c1c6c3035c3b902c988
+
+CORREZIONI REALMENTE PRESENTI NEL FILE IMPACCHETTATO:
+- LIVE: COMPENSAZIONI RIPOSO SETTIMANALE = 0 occorrenze
+- LIVE: FINE RIPOSI = 0 occorrenze
+- CONTROLLO: COMPENSAZIONI RIPOSO SETTIMANALE = 1 occorrenza
+- CONTROLLO: FINE RIPOSI = 1 occorrenza
+- ordine CONTROLLO: compensazioni -> fine riposi -> leggi/regolamenti
+- F998 viene memorizzato in lastWeeklyRestEndEpoch
+- ancoraggio impegno = più recente tra F997 e F998
+- service worker = toratako-pwa-v11-real-duty-control-rests
+- CardDownload / ACK / credits / Drive non modificati
+
+GIT BLOB ATTESI DOPO IL CARICAMENTO:
+index.html: 71a09b0628f7f1e8e50bff5c537020e0689d6d00
+service-worker.js: 06c424ee6fbc1acd474d24d6ebaf69b42dc57695
+
+SHA256:
+index.html: b841bf1bf48f1f56c71da73211fd8d0e4d5fd17934df6dbd762ccddf6fd35f11
+service-worker.js: 4b35413ccfb0371df433efe79ef75c30319bcfb37a9f22fb6856f6addae0f74b
