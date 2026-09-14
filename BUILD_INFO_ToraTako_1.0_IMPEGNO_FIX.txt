@@ -1,0 +1,12 @@
+ToraTako 1.0 - FIX IMPEGNO F99C
+Data: 2026-09-14
+
+Correzione:
+- se F99C residuo supera 13h (780 min), la finestra di impegno viene riconosciuta direttamente come 15h
+- evita il falso 0:00 / 13h quando F997 non è disponibile
+- mantiene invariati CardDownload, Drive, compensazioni e trasporto BLE
+- cache service worker: toratako-pwa-v8-impegno-f99c
+
+File da sostituire nella root GitHub:
+- index.html
+- service-worker.js
