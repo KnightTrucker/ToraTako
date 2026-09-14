@@ -1,0 +1,16 @@
+ToraTako 1.0 - FIX IMPEGNO 15h + SPOSTAMENTO RIPOSI IN CONTROLLO
+Data: 2026-09-14
+
+Correzioni incluse:
+- l'impegno usa il più recente tra F997 (fine riposo giornaliero) e F998 (fine riposo settimanale)
+- dopo il riposo settimanale del lunedì la nuova finestra viene quindi ricostruita correttamente a 15h quando F99C lo conferma
+- COMPENSAZIONI RIPOSO SETTIMANALE rimossa dalla LIVE
+- FINE RIPOSI rimossa dalla LIVE
+- entrambe spostate in CONTROLLO, immediatamente sopra LEGGI E REGOLAMENTI DI RIFERIMENTO
+- in CONTROLLO queste due sezioni vengono calcolate dall'archivio carta caricato/aggiornato
+- nessuna modifica al motore CardDownload, ACK, credits o Google Drive
+- cache PWA: toratako-pwa-v10-weekly-anchor-control-rests
+
+File da sostituire nella root GitHub:
+1) index.html
+2) service-worker.js

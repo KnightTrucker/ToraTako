@@ -2620,6 +2620,18 @@ let device,server,fifo,credits,txCredits=0,timer=null,idx=0,busy=false,expected=
 let externalTransportOwner=false;
 let dtcoDataReady=false,bootstrapTimer=null,bootstrapProbeBusy=false;
 let lastDailyRestEndEpoch=null,inferredCommitmentLimitHours=null;
+function commitmentDayKey(){
+  const d=new Date();
+  return `toratako.commitmentLimit.${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function readPersistedCommitmentLimit(){
+  try{const v=Number(localStorage.getItem(commitmentDayKey()));return v===15||v===13?v:null}catch(_){return null}
+}
+function persistCommitmentLimit(v){
+  if(v!==13&&v!==15)return;
+  try{localStorage.setItem(commitmentDayKey(),String(v))}catch(_){}
+}
+
 let internalTransportRecovery=false,recoveryUiTimer=null;
 // Stato UI della pausa 15/45: serve solo a rappresentare correttamente una pausa in corso
 // e a non riusare per errore il vecchio contatore F923 appena terminati 45 minuti validi.
@@ -2995,11 +3007,18 @@ function render(){
   const gauge=$('commitmentGauge'),cg=$('commitmentGaugeFill');
   gauge.classList.remove('seg-13');
   gauge.classList.add('seg-15');
-  cg.style.width='100%';
-  cg.style.clipPath=`inset(0 ${Math.max(0,100-commitmentPct)}% 0 0)`;
-  // v1.45 — parte utilizzabile dell'impegno: verde 0–50%, giallo 50–80%, arancio 80–100%.
-  // L'eventuale tratto 13→15h non disponibile resta separato nel blocco dedicato.
-  cg.style.background=`linear-gradient(to right, var(--green) 0 ${stop50}%, #ffd400 ${stop50}% ${stop80}%, #ff8a00 ${stop80}% ${limitOn15}%, transparent ${limitOn15}% 100%)`;
+  // FIX 2026-09-14b — riempimento reale della barra: niente clip-path.
+  // La larghezza del layer coincide direttamente con il tempo di impegno trascorso.
+  cg.style.clipPath='none';
+  cg.style.width=`${commitmentPct}%`;
+  if(commitmentElapsed!=null && commitmentElapsed>0){
+    const greenUntil=Math.min(100,(commitmentLimitMin*.50/commitmentElapsed)*100);
+    const yellowUntil=Math.min(100,(commitmentLimitMin*.80/commitmentElapsed)*100);
+    const orangeUntil=Math.min(100,(commitmentLimitMin/commitmentElapsed)*100);
+    cg.style.background=`linear-gradient(to right, var(--green) 0 ${greenUntil}%, #ffd400 ${greenUntil}% ${yellowUntil}%, #ff8a00 ${yellowUntil}% ${orangeUntil}%)`;
+  }else{
+    cg.style.background='var(--green)';
+  }
   $('commitmentGaugeForbidden').style.display=commitmentLimitHours===13?'block':'none';
   const labels=$('commitmentLabels');
   if(labels){
@@ -3224,7 +3243,9 @@ function isoTimeDateEpoch(d){
  return Date.UTC(yr,mon-1,day,hr,min,Math.floor(sec),Math.round((sec%1)*1000));
 }
 function getCommitmentLimitHours(commitmentMin){
-  if(!Number.isFinite(commitmentMin))return inferredCommitmentLimitHours||13;
+  const persisted=readPersistedCommitmentLimit();
+  if(!Number.isFinite(commitmentMin))return inferredCommitmentLimitHours||persisted||13;
+
 
   // FIX 2026-09-14 — F99C è già sufficiente a escludere una finestra da 13h
   // quando il residuo supera 13h (780 min). In quel caso il DTCO sta necessariamente
@@ -3233,6 +3254,7 @@ function getCommitmentLimitHours(commitmentMin){
   if(commitmentMin>780){
     if(inferredCommitmentLimitHours!==15){
       inferredCommitmentLimitHours=15;
+      persistCommitmentLimit(15);
       log(`IMPEGNO: limite 15h confermato direttamente da F99C (${fmt(commitmentMin)} residui).`);
     }
     return 15;
@@ -3240,13 +3262,13 @@ function getCommitmentLimitHours(commitmentMin){
 
   // Se in questa stessa sessione la finestra è già stata identificata a 15h,
   // non la riduciamo a 13h solo perché il countdown è sceso sotto le 13 ore.
-  if(inferredCommitmentLimitHours===15 && !Number.isFinite(lastDailyRestEndEpoch))return 15;
+  if((inferredCommitmentLimitHours===15||persisted===15) && !Number.isFinite(lastDailyRestEndEpoch)){inferredCommitmentLimitHours=15;return 15;}
 
   // Con F997 disponibile possiamo distinguere in modo affidabile 13h/15h usando
   // tempo trascorso + residuo F99C.
-  if(!Number.isFinite(lastDailyRestEndEpoch))return inferredCommitmentLimitHours||13;
+  if(!Number.isFinite(lastDailyRestEndEpoch))return inferredCommitmentLimitHours||persisted||13;
   const elapsedMin=(Date.now()-lastDailyRestEndEpoch)/60000;
-  if(!Number.isFinite(elapsedMin)||elapsedMin<0)return inferredCommitmentLimitHours||13;
+  if(!Number.isFinite(elapsedMin)||elapsedMin<0)return inferredCommitmentLimitHours||persisted||13;
   const totalWindow=elapsedMin+Math.max(0,commitmentMin);
   const d13=Math.abs(totalWindow-780),d15=Math.abs(totalWindow-900);
   // Accettiamo l'inferenza solo se il totale è ragionevolmente vicino a 13h o 15h.
@@ -3255,10 +3277,11 @@ function getCommitmentLimitHours(commitmentMin){
     const candidate=d15<d13?15:13;
     if(inferredCommitmentLimitHours!==candidate){
       inferredCommitmentLimitHours=candidate;
+      persistCommitmentLimit(candidate);
       log(`IMPEGNO: limite ${candidate}h calcolato da F997 + F99C (finestra ${fmt(totalWindow)}).`);
     }
   }
-  return inferredCommitmentLimitHours||13;
+  return inferredCommitmentLimitHours||persisted||13;
 }
 function driverId(d){
  if(d.length<19)return ascii(d)||hex(d);
