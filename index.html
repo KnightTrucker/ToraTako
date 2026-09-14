@@ -2,7 +2,7 @@
 
 <html lang="it">
 <head>
-<meta name="toratako-build" content="1.0-20260914-real-duty-control-rests">
+<meta name="toratako-build" content="1.0-20260914-internal-splash-v15-final">
 
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
@@ -2160,6 +2160,8 @@ body.beta-data-mode #liveView .brand-header{margin-bottom:0!important}
 }
 </style>
 <link href="./manifest.webmanifest" rel="manifest"/>
+<link rel="preload" as="image" href="./splash-1080x1920.png" media="(orientation: portrait)"/>
+<link rel="preload" as="image" href="./splash-1920x1080.png" media="(orientation: landscape)"/>
 <link href="./favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
 <link href="./apple-touch-icon.png" rel="apple-touch-icon"/>
 <link href="./splash-1080x1920.png" rel="apple-touch-startup-image"/>
@@ -2372,8 +2374,29 @@ body.beta-data-mode #liveView .brand-header{margin-bottom:0!important}
 .brand-powered-wrap{position:relative!important;z-index:10!important}
 .crest-version-modal{z-index:2147483646!important}
 </style>
+
+<style id="toratakoInternalSplashStyle">
+html.toratako-splash-lock,html.toratako-splash-lock body{overflow:hidden!important}
+#toratakoInternalSplash{position:fixed!important;inset:0!important;z-index:2147483647!important;display:block!important;background:#1b0700!important;opacity:1!important;visibility:visible!important;transition:opacity .42s ease,visibility .42s ease!important;overflow:hidden!important;pointer-events:none!important}
+#toratakoInternalSplash picture,#toratakoInternalSplash img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;margin:0!important;padding:0!important}
+#toratakoInternalSplash img{object-fit:cover!important;object-position:center center!important}
+#toratakoInternalSplash::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,5,0,.04),rgba(20,5,0,0) 55%,rgba(20,5,0,.14))}
+#toratakoInternalSplash.toratako-splash-hide{opacity:0!important;visibility:hidden!important}
+@media (prefers-reduced-motion:reduce){#toratakoInternalSplash{transition:none!important}}
+</style>
+<script id="toratakoInternalSplashBoot">
+document.documentElement.classList.add('toratako-splash-lock');
+</script>
+
 </head>
 <body>
+<div id="toratakoInternalSplash" aria-label="ToraTako avvio">
+  <picture>
+    <source media="(orientation: landscape)" srcset="./splash-1920x1080.png"/>
+    <img src="./splash-1080x1920.png" alt="ToraTako" fetchpriority="high" decoding="sync"/>
+  </picture>
+</div>
+
 <section id="liveView">
 <div class="dashboard">
 <div class="brand-header panel">
@@ -4339,6 +4362,35 @@ if ('serviceWorker' in navigator) {
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
  else init();
+})();
+</script>
+
+
+<script id="toratakoInternalSplashController">
+(()=>{
+  const splash=document.getElementById('toratakoInternalSplash');
+  if(!splash)return;
+  const shownAt=performance.now();
+  const MIN_VISIBLE_MS = 2200;
+  const HARD_MAX_MS = 5200;
+  let closing=false;
+  function finish(){
+    if(closing)return;
+    closing=true;
+    const elapsed=performance.now()-shownAt;
+    const delay=Math.max(0,MIN_VISIBLE_MS-elapsed);
+    setTimeout(()=>{
+      splash.classList.add('toratako-splash-hide');
+      document.documentElement.classList.remove('toratako-splash-lock');
+      setTimeout(()=>{try{splash.remove()}catch(_){}},500);
+    },delay);
+  }
+  if(document.readyState==='complete'){
+    requestAnimationFrame(()=>requestAnimationFrame(finish));
+  }else{
+    window.addEventListener('load',finish,{once:true});
+  }
+  setTimeout(finish,HARD_MAX_MS);
 })();
 </script>
 
