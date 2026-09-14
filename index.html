@@ -3224,8 +3224,27 @@ function isoTimeDateEpoch(d){
  return Date.UTC(yr,mon-1,day,hr,min,Math.floor(sec),Math.round((sec%1)*1000));
 }
 function getCommitmentLimitHours(commitmentMin){
-  // Fallback prudenziale: finché F997 non è disponibile, consideriamo 13h.
-  if(!Number.isFinite(commitmentMin)||!Number.isFinite(lastDailyRestEndEpoch))return inferredCommitmentLimitHours||13;
+  if(!Number.isFinite(commitmentMin))return inferredCommitmentLimitHours||13;
+
+  // FIX 2026-09-14 — F99C è già sufficiente a escludere una finestra da 13h
+  // quando il residuo supera 13h (780 min). In quel caso il DTCO sta necessariamente
+  // comunicando una finestra di impegno da 15h. Prima il fallback forzava 13h quando
+  // F997 non era disponibile, producendo l'assurdo 0:00 / 13h con F99C=14h14.
+  if(commitmentMin>780){
+    if(inferredCommitmentLimitHours!==15){
+      inferredCommitmentLimitHours=15;
+      log(`IMPEGNO: limite 15h confermato direttamente da F99C (${fmt(commitmentMin)} residui).`);
+    }
+    return 15;
+  }
+
+  // Se in questa stessa sessione la finestra è già stata identificata a 15h,
+  // non la riduciamo a 13h solo perché il countdown è sceso sotto le 13 ore.
+  if(inferredCommitmentLimitHours===15 && !Number.isFinite(lastDailyRestEndEpoch))return 15;
+
+  // Con F997 disponibile possiamo distinguere in modo affidabile 13h/15h usando
+  // tempo trascorso + residuo F99C.
+  if(!Number.isFinite(lastDailyRestEndEpoch))return inferredCommitmentLimitHours||13;
   const elapsedMin=(Date.now()-lastDailyRestEndEpoch)/60000;
   if(!Number.isFinite(elapsedMin)||elapsedMin<0)return inferredCommitmentLimitHours||13;
   const totalWindow=elapsedMin+Math.max(0,commitmentMin);

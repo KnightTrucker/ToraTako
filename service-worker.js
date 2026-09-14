@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v8-impegno-f99c';
+const CACHE_NAME = 'toratako-pwa-v9-impegno-bar';
 
 const APP_SHELL = [
   './',

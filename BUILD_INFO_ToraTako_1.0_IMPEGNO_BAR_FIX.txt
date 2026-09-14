@@ -1,0 +1,14 @@
+ToraTako 1.0 - FIX BARRA IMPEGNO
+Data: 2026-09-14
+
+Correzioni:
+- F99C > 13h conferma finestra impegno 15h
+- il limite 13/15h viene memorizzato per la giornata corrente
+- la barra impegno usa larghezza reale, non più clip-path
+- il tratto trascorso si colora verde/giallo/arancio
+- cache PWA aggiornata: toratako-pwa-v9-impegno-bar
+- nessuna modifica a CardDownload, Drive o BLE
+
+File da sostituire nella root GitHub:
+1) index.html
+2) service-worker.js
