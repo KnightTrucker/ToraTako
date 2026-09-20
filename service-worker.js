@@ -1,15 +1,15 @@
-const CACHE_NAME = 'toratako-pwa-v16-d19-weekly-pending';
+const CACHE_NAME = 'toratako-pwa-v16-compensation-legal-final';
 
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './offline.html',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-maskable-512.png',
-  './apple-touch-icon.png',
-  './favicon-32.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon-maskable-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/favicon-32.png',
   './splash-1080x1920.png',
   './splash-1920x1080.png'
 ];
