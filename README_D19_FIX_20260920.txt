@@ -1,0 +1,19 @@
+ToraTako 1.0 — FIX D19 RIPOSO SETTIMANALE IN CORSO
+Data: 2026-09-20
+
+Base usata:
+- index.html esattamente uguale alla build pubblicata su GitHub prima del fix
+  Git blob SHA base: 05807fd6fc86a056002726bb9c13c0ffac5fb144
+- service-worker.js esattamente uguale alla build GitHub v15 prima del bump cache
+
+Correzione:
+- se il riposo settimanale è già iniziato entro la scadenza 6x24h ed è ancora in corso,
+  Scheda Sporca NON genera D19 prima che il riposo abbia raggiunto 24h o sia terminato.
+- le soste concluse sotto 24h continuano a NON essere considerate riposi settimanali.
+- cache PWA aggiornata a toratako-pwa-v16-d19-weekly-pending.
+
+Test reale eseguito su ToraTako_Carta.bin fornito dall'utente:
+- dopo il fix: 2 segnalazioni C1
+- D19 presente: NO
+
+Tutti i file dello ZIP vanno nella ROOT del repository.

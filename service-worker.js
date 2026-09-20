@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v15-internal-splash-final';
+const CACHE_NAME = 'toratako-pwa-v16-d19-weekly-pending';
 
 const APP_SHELL = [
   './',
