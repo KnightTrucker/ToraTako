@@ -1,0 +1,16 @@
+ToraTako - FIX RECUPERO DOWNLOAD DTCO
+Data: 2026-09-21
+
+Correzioni:
+- nessuna modifica al protocollo CardDownload funzionante
+- handleFrame / ACK 0x83 0x76 / MsgC / credits / timing 120 ms invariati
+- preflight reale del canale Download prima di ogni aggiornamento
+- se GATT risulta collegato ma lfifo/lcred non sono pronti, i servizi vengono riaperti
+- dopo un tentativo interrotto vengono azzerati solo i buffer BLE incompleti dExp/dGot/dBuf/lExp/lGot/lBuf
+- watchdog: dopo 25 s senza alcun frame ricevuto il tentativo viene chiuso in modo pulito
+- in caso di timeout il BIN precedente resta protetto
+- viene tentato il ripristino automatico del trasporto condiviso
+- service worker cache aggiornata a toratako-pwa-v18-download-recovery
+
+SHA256 index.html: 799fc209a25adebecc019765c3eb71f3f626aed5e2250b0db47e2babd6fdc234
+SHA256 service-worker.js: 256efb075c5abf60c10579826c43bf5f4fc5de992f4413fcaa4ab6fc28ef2e22

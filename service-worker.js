@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v17-comp-registry-drive';
+const CACHE_NAME = 'toratako-pwa-v18-download-recovery';
 
 const APP_SHELL = [
   './',
