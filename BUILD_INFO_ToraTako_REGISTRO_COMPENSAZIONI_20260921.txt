@@ -1,0 +1,30 @@
+ToraTako 1.0 - REGISTRO STORICO COMPENSAZIONI
+Data: 2026-09-21
+
+File da sostituire nella ROOT GitHub:
+- index.html
+- service-worker.js
+
+Nuovo archivio runtime Google Drive (creato automaticamente dall'app):
+KnightTrucker/ToraTako_Compensazioni.json
+
+Funzioni incluse:
+- storico permanente APERTA / COMPENSATA / SCADUTA
+- debito originario e settimana di origine
+- scadenza legale
+- collegamento al riposo di recupero rilevato da EF0504
+- intervallo preciso usato come compensazione
+- conferma facoltativa del conducente dell'aggancio
+- conferma salvata nel registro senza modificare ToraTako_Carta.bin
+- sincronizzazione locale + Google Drive
+- PDF REGISTRO COMPENSAZIONI
+- storico non cancellato quando il debito passa a COMPENSATA
+
+Test effettuati:
+- node --check JS principale/iframe: OK
+- node --check service-worker.js: OK
+- ToraTako_Carta.bin reale: debito 07/09-13/09 ricostruito 9h08 APERTA
+- test record COMPENSATA con dettaglio riposo/segmento: OK
+
+SHA256 index.html: 799fc209a25adebecc019765c3eb71f3f626aed5e2250b0db47e2babd6fdc234
+SHA256 service-worker.js: 61eb5103aacfa104f36b233974ae08391945a68fba2bcbfd0be9ffffc3e1d8fe
