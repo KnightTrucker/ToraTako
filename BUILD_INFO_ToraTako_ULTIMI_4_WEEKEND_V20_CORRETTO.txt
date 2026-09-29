@@ -1,0 +1,14 @@
+ToraTako - ULTIMI 4 WEEKEND V20 CORRETTO
+Data: 2026-09-29
+
+Correzione della build precedente:
+- il precedente ZIP NON conteneva il pannello nell'index.html finale
+- questa build contiene realmente il pannello dentro STAMPATE/CONTROLLO
+- ordine verificato: SCHEDA SPORCA? -> ULTIMI 4 WEEKEND -> EVENTI TECNICI CARTA
+- 4 card: ultimo, penultimo, terzultimo, quarto weekend
+- ogni card mostra periodo, ore di riposo e luogo
+- service worker cache: toratako-pwa-v20-weekend-4cards-real
+- node --check superato su JS principale, iframe e service worker
+
+SHA256 index.html: c72eae2073839b7034132185db8b4da3482425eaec06ce2ac10d3df26dc67671
+SHA256 service-worker.js: 0665e605af67909328947d44915468809b27837680c7da56ee5a1fab55cc7a17
