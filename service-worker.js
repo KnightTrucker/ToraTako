@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toratako-pwa-v18-download-recovery';
+const CACHE_NAME = 'toratako-pwa-v19-weekend-4cards';
 
 const APP_SHELL = [
   './',

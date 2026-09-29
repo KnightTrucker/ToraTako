@@ -1,0 +1,17 @@
+ToraTako - ULTIMI 4 WEEKEND IN CONTROLLO
+Data: 2026-09-29
+
+Modifica UI:
+- riquadro fisso tra SCHEDA SPORCA? e EVENTI TECNICI CARTA
+- 4 card: ultimo, penultimo, terzultimo, quarto weekend
+- per ciascuna: intervallo date, ore totali di riposo, luogo di inizio
+- il luogo usa EF0506 / EF0528 già presenti nella carta
+- se disponibili coordinate GNSS, viene tentata la stessa risoluzione indirizzo già usata nelle Stampate
+- nessun luogo viene inventato: in assenza di dati appare N/D
+- vengono mostrati solo riposi settimanali conclusi di almeno 24h
+- su smartphone le 4 card sono disposte 2 x 2
+- CardDownload, BLE, Drive e compensazioni non modificati
+- service worker cache: toratako-pwa-v19-weekend-4cards
+
+SHA256 index.html: d46ce41b789e62f55602c3275814bf5ffe37a43630e9642281bba4fa17233157
+SHA256 service-worker.js: 21b09d55c51727013d739bfdfb81f6a815a16147f4736e7a8216ccfa14aac62c
