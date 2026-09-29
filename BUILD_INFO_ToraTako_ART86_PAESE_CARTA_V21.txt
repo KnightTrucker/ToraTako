@@ -1,0 +1,19 @@
+ToraTako - Art. 8(6) / profilo Paesi V21
+Data: 2026-09-29
+
+Correzioni:
+- corretto bug null -> 0 -> simbolo — per residenza/sede impresa
+- Stato emittente carta letto automaticamente da EF 0520 CardIdentification
+- sul BIN reale testato: EF 0520 = 26 = Italia
+- riquadro grafico in CONTROLLO con Carta emessa da / Residenza / Sede impresa
+- residenza e sede sono proposte dal Paese emittente ma restano DA CONFERMARE
+- pulsante CONFERMA RESIDENZA E SEDE IMPRESA
+- modifica manuale dei select conferma il relativo valore
+- verifica geografica Art. 8(6) automatica solo dopo conferma
+- nota Art. 8(6) mostra ora anche lo Stato emittente della carta
+- pannello ULTIMI 4 WEEKEND mantenuto
+- CardDownload / BLE / Drive non modificati
+- cache service worker: toratako-pwa-v21-art86-country-profile
+
+SHA256 index.html: 50c9cdb6a295e7aa62ba5626defe5db095d3516ad78ac3df73d1fe13d588c55f
+SHA256 service-worker.js: 027eb6997843d1939f82147dfdf099ef907e4a5385c50bf6e4de8ca621973b4b
